@@ -1,0 +1,147 @@
+version: '3.7'
+
+services:
+  eureka-server:
+    build:
+      context: ./eureka-server
+      dockerfile: Dockerfile
+    container_name: eureka-server
+    ports:
+      - 8761:8761
+    networks:
+      - net_biblioteca
+
+  cliente-service:
+    build:
+      context: ./clientes
+      dockerfile: Dockerfile
+    depends_on:
+      mongo-service:
+        condition: service_started
+      eureka-server:
+        condition: service_started
+    environment:
+      - SPRING_DATA_MONGODB_URI=mongodb://root:root@mongo-service:27017/clientes?authSource=admin
+      - SPRING_APPLICATION_NAME=cliente-service
+      - EUREKA_CLIENT_SERVICE-URL_DEFAULTZONE=http://eureka-server:8761/eureka/
+    networks:
+      - net_biblioteca
+
+  libro-service:
+    build:
+      context: ./libros
+      dockerfile: Dockerfile
+    container_name: libro-service
+    depends_on:
+      mariadb-service:
+        condition: service_started
+      eureka-server:
+        condition: service_started
+    environment:
+      - SPRING_DATASOURCE_DRIVER-CLASS-NAME=com.mysql.cj.jdbc.Driver
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mariadb-service:3306/libros?createDatabaseIfNotExist=true
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - SPRING_APPLICATION_NAME=libro-service
+      - EUREKA_CLIENT_SERVICE-URL_DEFAULTZONE=http://eureka-server:8761/eureka/
+    networks:
+      - net_biblioteca
+
+  prestamo-service:
+    build:
+      context: ./prestamos
+      dockerfile: Dockerfile
+    container_name: prestamo-service
+    depends_on:
+      mariadb-prestamos:
+        condition: service_started
+      eureka-server:
+        condition: service_started
+    environment:
+      - SPRING_DATASOURCE_DRIVER-CLASS-NAME=com.mysql.cj.jdbc.Driver
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mariadb-prestamos:3306/prestamos?createDatabaseIfNotExists
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - SPRING_APPLICATION_NAME=prestamo-service
+      - EUREKA_CLIENT_SERVICE-URL_DEFAULTZONE=http://eureka-server:8761/eureka/
+    networks:
+      - net_biblioteca
+
+  gateway-service:
+    build:
+      context: ./gateway
+      dockerfile: Dockerfile
+    container_name: gateway-service
+    depends_on:
+      eureka-server:
+        condition: service_started
+      cliente-service:
+        condition: service_started
+      libro-service:
+        condition: service_started
+      prestamo-service:
+        condition: service_started
+    environment:
+      - SPRING_APPLICATION_NAME=gateway-service
+      - EUREKA_CLIENT_SERVICE-URL_DEFAULTZONE=http://eureka-server:8761/eureka/
+    ports:
+      - 8080:8080
+    networks:
+      - net_biblioteca
+
+  mongo-service:
+    image: mongo
+    container_name: mongo-service
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root
+    ports:
+      - 27017:27017
+    networks:
+      - net_biblioteca
+
+  mongo-express:
+    image: mongo-express
+    container_name: mongo-express
+    depends_on:
+      mongo-service:
+        condition: service_started
+    ports:
+      - 8081:8081
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: root
+      ME_CONFIG_MONGODB_URL: mongodb://root:root@mongo-service:27017/
+    networks:
+      - net_biblioteca
+
+  mariadb-service:
+    image: 'mariadb'
+    container_name: mariadb-service
+    environment:
+      - MARIADB_DATABASE=ejemplo
+      - MARIADB_USER=root
+      - MARIADB_PASSWORD=root
+      - MARIADB_ROOT_PASSWORD=root
+    volumes:
+      - ./Config/mysql:/var/lib/mysql
+    networks:
+      - net_biblioteca
+
+  mariadb-prestamos:
+    image: 'mariadb'
+    container_name: mariadb-prestamos
+    environment:
+      - MARIADB_DATABASE=prestamos
+      - MARIADB_USER=root
+      - MARIADB_PASSWORD=root
+      - MARIADB_ROOT_PASSWORD=root
+    networks:
+      - net_biblioteca
+
+networks:
+  net_biblioteca:
+    driver: bridge
+    name: net_biblioteca
