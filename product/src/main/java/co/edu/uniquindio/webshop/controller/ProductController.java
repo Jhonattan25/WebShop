@@ -39,7 +39,7 @@ public class ProductController {
     @GetMapping("/{idProduct}")
     public ResponseEntity<Response<ProductResponse>> findById(@PathVariable long idProduct) {
         return ResponseEntity.status(HttpStatus.OK).body( new Response<>(
-                "Producto actualizado correctamente", productService.findByIdProduct(idProduct)));
+                "Producto consultado correctamente", productService.findByIdProduct(idProduct)));
     }
 
     @DeleteMapping("/{idProduct}")
@@ -53,13 +53,6 @@ public class ProductController {
     public ResponseEntity<Response<String>> stock(@RequestBody ProductStocksQtyDTO productStocksQtyDTO) {
         productService.validateStocks(productStocksQtyDTO);
         return ResponseEntity.status(HttpStatus.OK).body( new Response<>(
-                "Producto actualizado correctamente"));
+                "Productos existentes y actualizados correctamente"));
     }
-/*    @PostMapping("id")
-    public ResponseEntity<Response<Boolean>> isbnsExist(@RequestBody LibroISBNDTO libroISBNDTO){
-        System.out.println(port);
-
-        return ResponseEntity.status(HttpStatus.CREATED).body( new Respuesta<>(
-                "ISBNs existentes", libroServicio.isbnsExist(libroISBNDTO)) );
-    }*/
 }

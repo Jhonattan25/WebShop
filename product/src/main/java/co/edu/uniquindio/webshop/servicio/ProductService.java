@@ -24,38 +24,19 @@ public class ProductService {
     }
 
     public void delete(long id) {
-        findById(id);
-        productRepo.deleteById(id);
+        Product product = findById(id);
+        product.setIsActive(false);
+        productRepo.save(product);
     }
-/*    public Boolean isbnsExist(LibroISBNDTO libroISBNDTO){
-
-        List<Libro> libros = libroRepo.findAllById( libroISBNDTO.isbns() );
-
-        if(libros.size()!=libroISBNDTO.isbns().size()){
-
-            List<String> isbnsExistentes = libros.stream().map(Libro::getIsbn).toList();
-
-            String noEncontrados = libroISBNDTO.isbns()
-                    .stream()
-                    .filter(id -> !isbnsExistentes.contains(id))
-                    .map(Object::toString)
-                    .collect(Collectors.joining(","));
-
-            throw new LibroNoEncontradoException("Los libros con los isbn "+noEncontrados+" no existen");
-
-        }
-
-        return true;
-    }*/
 
     public Product findById(long id){
-        return productRepo.findById(id).orElseThrow(() -> new ProductNotFoundException("El Producto no existe"));
+        return productRepo.findByIdAndIsActive(id,true).orElseThrow(() -> new ProductNotFoundException("El Producto no existe"));
     }
     public ProductResponse findByIdProduct(long id){
         return convert(findById(id));
     }
     public List<ProductResponse> findAll(){
-        return productRepo.findAll().stream()
+        return productRepo.findAllByIsActive(true).stream()
                 .map(element -> convert(element))
                 .collect(Collectors.toList());
     }
@@ -88,6 +69,7 @@ public class ProductService {
                 .price(productPOST.price())
                 .stock(productPOST.stock())
                 .imageUrl(productPOST.imageUrl())
+                .isActive(true)
                 .build();
         return nuevo;
     }

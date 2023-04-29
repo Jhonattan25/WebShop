@@ -4,6 +4,7 @@ package co.edu.uniquindio.biblioteca.security;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.web.server.SecurityWebFilterChain;
@@ -26,9 +27,12 @@ public class WebSecurityConfig {
 
         http.authorizeExchange( e ->
                     e.pathMatchers("/api/test/anonymous").permitAll()
-                            .pathMatchers("/api/product/{idProduct}").hasRole(ADMIN)
-                            .pathMatchers("/api/product").hasAnyRole(ADMIN, USER)
-                            .pathMatchers("/api/product/all").permitAll()
+                            .pathMatchers(HttpMethod.GET,"/api/product/all").permitAll()
+                            .pathMatchers(HttpMethod.PUT,"/api/product/stock").hasRole(ADMIN)
+                            .pathMatchers(HttpMethod.GET,"/api/product/{idProduct}").permitAll()
+                            .pathMatchers(HttpMethod.PUT,"/api/product/{idProduct}").hasRole(ADMIN)
+                            .pathMatchers(HttpMethod.DELETE,"/api/product/{idProduct}").hasRole(ADMIN)
+                            .pathMatchers(HttpMethod.POST,"/api/product").hasAnyRole(ADMIN)
                             .anyExchange().authenticated());
 
         http.oauth2ResourceServer()
