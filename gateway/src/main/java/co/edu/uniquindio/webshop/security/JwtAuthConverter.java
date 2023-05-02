@@ -1,4 +1,4 @@
-package co.edu.uniquindio.biblioteca.security;
+package co.edu.uniquindio.webshop.security;
 
 
 import org.springframework.beans.factory.annotation.Value;

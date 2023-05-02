@@ -1,4 +1,4 @@
-package co.edu.uniquindio.webshop.servicio.excepciones;
+package co.edu.uniquindio.webshop.service.excepciones;
 
 public class ProductNotFoundException extends RuntimeException {
 

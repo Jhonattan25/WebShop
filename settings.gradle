@@ -2,4 +2,5 @@ rootProject.name = 'WebShop'
 include 'product'
 include 'eureka-server'
 include 'gateway'
+include 'authentication'
 

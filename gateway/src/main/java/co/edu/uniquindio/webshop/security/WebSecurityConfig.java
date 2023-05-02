@@ -1,4 +1,4 @@
-package co.edu.uniquindio.biblioteca.security;
+package co.edu.uniquindio.webshop.security;
 
 
 import lombok.RequiredArgsConstructor;
@@ -26,7 +26,7 @@ public class WebSecurityConfig {
 
 
         http.authorizeExchange( e ->
-                    e.pathMatchers("/api/test/anonymous").permitAll()
+                    e.pathMatchers("/api/auth/**").permitAll()
                             .pathMatchers(HttpMethod.GET,"/api/product/all").permitAll()
                             .pathMatchers(HttpMethod.PUT,"/api/product/stock").hasRole(ADMIN)
                             .pathMatchers(HttpMethod.GET,"/api/product/{idProduct}").permitAll()

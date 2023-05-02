@@ -1,4 +1,4 @@
-package co.edu.uniquindio.webshop.repo;
+package co.edu.uniquindio.webshop.repository;
 
 import co.edu.uniquindio.webshop.model.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface ProductRepo extends JpaRepository<Product, Long> {
+public interface ProductRepository extends JpaRepository<Product, Long> {
 
     Optional<Product> findByIdAndIsActive(Long id, Boolean isActive);
     List<Product> findAllByIsActive(Boolean isActive);

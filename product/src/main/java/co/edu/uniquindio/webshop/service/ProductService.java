@@ -1,12 +1,12 @@
-package co.edu.uniquindio.webshop.servicio;
+package co.edu.uniquindio.webshop.service;
 
 import co.edu.uniquindio.webshop.dto.ProductPOST;
 import co.edu.uniquindio.webshop.dto.ProductResponse;
 import co.edu.uniquindio.webshop.dto.ProductStockDTO;
 import co.edu.uniquindio.webshop.dto.ProductStocksQtyDTO;
 import co.edu.uniquindio.webshop.model.Product;
-import co.edu.uniquindio.webshop.repo.ProductRepo;
-import co.edu.uniquindio.webshop.servicio.excepciones.ProductNotFoundException;
+import co.edu.uniquindio.webshop.repository.ProductRepository;
+import co.edu.uniquindio.webshop.service.excepciones.ProductNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class ProductService {
 
-    private final ProductRepo productRepo;
+    private final ProductRepository productRepo;
 
     public ProductResponse save(ProductPOST product){
         return convert(productRepo.save(convert(product)));

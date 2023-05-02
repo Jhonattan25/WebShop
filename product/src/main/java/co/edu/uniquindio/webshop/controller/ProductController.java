@@ -4,7 +4,7 @@ import co.edu.uniquindio.webshop.dto.ProductPOST;
 import co.edu.uniquindio.webshop.dto.ProductResponse;
 import co.edu.uniquindio.webshop.dto.ProductStocksQtyDTO;
 import co.edu.uniquindio.webshop.dto.Response;
-import co.edu.uniquindio.webshop.servicio.ProductService;
+import co.edu.uniquindio.webshop.service.ProductService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
