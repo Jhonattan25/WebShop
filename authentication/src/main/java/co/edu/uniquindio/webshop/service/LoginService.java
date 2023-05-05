@@ -4,8 +4,6 @@ import co.edu.uniquindio.webshop.dto.LoginDTO;
 import co.edu.uniquindio.webshop.dto.NewUserDTO;
 import co.edu.uniquindio.webshop.dto.TokenDTO;
 import co.edu.uniquindio.webshop.service.interfaces.OAuthFeingClient;
-import jakarta.ws.rs.core.MultivaluedHashMap;
-import jakarta.ws.rs.core.MultivaluedMap;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -21,19 +19,33 @@ public class LoginService {
     *
     * */
     public TokenDTO login(LoginDTO loginDTO){
-        MultivaluedMap<String, String> formData = new MultivaluedHashMap<>();
+        //MultivaluedMap<String, String> formData = new MultivaluedHashMap<>();
 
-        formData.add("grant_type","password");
-        formData.add("client_id","springboot-keycloak-client");
-        formData.add("username",loginDTO.username());
-        formData.add("password",loginDTO.password());
+        //formData.add("grant_type","password");
+        //formData.add("client_id","springboot-keycloak-client");
+        //formData.add("username",loginDTO.username());
+        //formData.add("password",loginDTO.password());
 
-        String form = "{password=admin, grant_type=password, client_id=springboot-keycloak-client, username=globaladmin}";
+        StringBuilder formData = new StringBuilder();
+
+        formData.append("password=");
+        formData.append(loginDTO.password());
+        formData.append("&");
+        formData.append("grant_type=");
+        formData.append("password");
+        formData.append("&");
+        formData.append("client_id=");
+        formData.append("springboot-keycloak-client");
+        formData.append("&");
+        formData.append("username=");
+        formData.append(loginDTO.username());
+
+        //String form = "password=admin&grant_type=password&client_id=springboot-keycloak-client&username=globaladmin";
 
         System.out.println("FORM: "+ formData);
 
        try {
-           TokenDTO tokenDTO = oAuthFeingClient.getToken(formData);
+           TokenDTO tokenDTO = oAuthFeingClient.getToken(formData.toString());
            return tokenDTO;
        }catch (Exception e){
            System.out.println("ERROR: "+e.getMessage());
