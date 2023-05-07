@@ -1,0 +1,399 @@
+{
+	"info": {
+		"_postman_id": "1192d110-b4e6-475b-90ed-b185f8ae5ab7",
+		"name": "WebShop",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "14344292",
+		"_collection_link": "https://www.postman.com/spacecraft-meteorologist-30145706/workspace/universidad/collection/14344292-1192d110-b4e6-475b-90ed-b185f8ae5ab7?action=share&creator=14344292&source=collection_link"
+	},
+	"item": [
+		{
+			"name": "Products",
+			"item": [
+				{
+					"name": "Create",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const trackingNumber = _.random(10000000, 999999999);\r",
+									"\r",
+									"pm.globals.set('trackingNumber', \"QR\".concat(trackingNumber));\r",
+									"\r",
+									"var moment = require('moment');\r",
+									"\r",
+									"pm.globals.set('currentDate', moment().format((\"YYYY-MM-DD\")));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJQdXlVNV9xVlZkY2RQOWItSDlBWTI3NjdVUEluc1oxZVZtY0pjWVZVcml3In0.eyJleHAiOjE2ODI3NDIzNTcsImlhdCI6MTY4Mjc0MjA1NywianRpIjoiY2ZkZGFhZDUtNzM3Ni00ZmJkLWIwN2MtY2Q4NDdlMTA0ZGVjIiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo5MDkwL3JlYWxtcy90dXRvcmlhbC1hcGkiLCJhdWQiOlsicmVhbG0tbWFuYWdlbWVudCIsImFjY291bnQiXSwic3ViIjoiY2M0MDUwYjktOTEwYi00OTJmLWI3NDctZjIyMmMyOTJjOTk1IiwidHlwIjoiQmVhcmVyIiwiYXpwIjoic3ByaW5nYm9vdC1rZXljbG9hay1jbGllbnQiLCJzZXNzaW9uX3N0YXRlIjoiZDYxZjc2N2YtYjYxMi00ZGE0LTkzOTYtNTAyOTA4YzIxNzVlIiwiYWNyIjoiMSIsImFsbG93ZWQtb3JpZ2lucyI6WyIqIl0sInJlYWxtX2FjY2VzcyI6eyJyb2xlcyI6WyJkZWZhdWx0LXJvbGVzLXR1dG9yaWFsLWFwaSIsIm9mZmxpbmVfYWNjZXNzIiwidW1hX2F1dGhvcml6YXRpb24iLCJhcHBfYWRtaW4iXX0sInJlc291cmNlX2FjY2VzcyI6eyJyZWFsbS1tYW5hZ2VtZW50Ijp7InJvbGVzIjpbIm1hbmFnZS11c2VycyJdfSwic3ByaW5nYm9vdC1rZXljbG9hay1jbGllbnQiOnsicm9sZXMiOlsiYWRtaW4iXX0sImFjY291bnQiOnsicm9sZXMiOlsibWFuYWdlLWFjY291bnQiLCJtYW5hZ2UtYWNjb3VudC1saW5rcyIsInZpZXctcHJvZmlsZSJdfX0sInNjb3BlIjoicHJvZmlsZSBlbWFpbCIsInNpZCI6ImQ2MWY3NjdmLWI2MTItNGRhNC05Mzk2LTUwMjkwOGMyMTc1ZSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJuYW1lIjoiQWRtaW4iLCJwcmVmZXJyZWRfdXNlcm5hbWUiOiJnbG9iYWxhZG1pbiIsImdpdmVuX25hbWUiOiJBZG1pbiIsImZhbWlseV9uYW1lIjoiIiwiZW1haWwiOiJhZG1pbkBtYWlsLmNvbSJ9.g8EeGJ-wQoHhzdtay4vqBuLv8dE4BRKtWALLKhXXDMRfSosWFFMnaiG0__mlD3pIiPgqG08kPiQriD9p6S4ORoEbA987nbUQRYmgFJUxk-2arHtT7nMJjUt21yOLHb7qVfd3gZCiOiyrM2uADscT54Zc0W28cZtvROp6Oj8eijHPFR0ToHkf9tuYu_oWz5XOO3XwVx5A2SrNdjRLmf0ThRVh7UA_2_rXaJSIIufVxqGCXvj4O2eIiMfa23dppfxVQi5TMnL2_zXzC7XnAK5IXgtthW3_zD34KcEJ5Xnzrnpnk7fEF251St7ciepVHGyHEO3K0XWaMVYoeqGWmqrElA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Celular\",\r\n    \"description\": \"Celular de alta gama\",\r\n    \"price\": \"1000000\",\r\n    \"stock\": \"40\",\r\n    \"imageUrl\": \"Celular.com\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/product",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"product"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Stock",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJQdXlVNV9xVlZkY2RQOWItSDlBWTI3NjdVUEluc1oxZVZtY0pjWVZVcml3In0.eyJleHAiOjE2ODM0MjEyMzQsImlhdCI6MTY4MzQxNzYzNCwianRpIjoiNTljYmI2YzUtY2U4OS00MzJjLTlkMWEtMTNkNDY0ZWViZTYwIiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo5MDkwL3JlYWxtcy90dXRvcmlhbC1hcGkiLCJhdWQiOiJhY2NvdW50Iiwic3ViIjoiMzk2YmJmYTYtYTIzMi00N2U1LTgxNDgtZGIxOGYwYjc3ZDVmIiwidHlwIjoiQmVhcmVyIiwiYXpwIjoic3ByaW5nYm9vdC1rZXljbG9hay1jbGllbnQiLCJzZXNzaW9uX3N0YXRlIjoiOGQ5YzI2ZDctNTI2NC00NTg4LWJkYjktNjE2OWZjMTdlOTU2IiwiYWNyIjoiMSIsImFsbG93ZWQtb3JpZ2lucyI6WyIqIl0sInJlYWxtX2FjY2VzcyI6eyJyb2xlcyI6WyJkZWZhdWx0LXJvbGVzLXR1dG9yaWFsLWFwaSIsIm9mZmxpbmVfYWNjZXNzIiwidW1hX2F1dGhvcml6YXRpb24iXX0sInJlc291cmNlX2FjY2VzcyI6eyJhY2NvdW50Ijp7InJvbGVzIjpbIm1hbmFnZS1hY2NvdW50IiwibWFuYWdlLWFjY291bnQtbGlua3MiLCJ2aWV3LXByb2ZpbGUiXX19LCJzY29wZSI6InByb2ZpbGUgZW1haWwiLCJzaWQiOiI4ZDljMjZkNy01MjY0LTQ1ODgtYmRiOS02MTY5ZmMxN2U5NTYiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwibmFtZSI6ImZyYW5rIGZyYW5rIiwicHJlZmVycmVkX3VzZXJuYW1lIjoiZnJhbmsiLCJnaXZlbl9uYW1lIjoiZnJhbmsiLCJmYW1pbHlfbmFtZSI6ImZyYW5rIiwiZW1haWwiOiJob2xhQGhvbGEuY29tIn0.Rt_2YO6J8tWhmB4aHdA587wnHeO2y_sYyP8rhTI_PFejh5H1BaR5J9rR1m3bvtSvOj7RrdDBH5-_HYh3t8kfuWYs85irxOLj0Igc_qAhpo5oh8kL9GbQtQ-FcIcBHAzN2Xb037itFOYOA0_WmzBMGKIxgUnORcXHdNhEx8bEk6V2NszMhJVrMcsMHfHgl6Phkg2vf9QBBc0QKLU6gXsPnyiV-Fw1NKAbiwhCi0iiJPAKR7zFpyHpK_lSBk2xRx5qx5AF4bLOYq8IlSwkwzXiHS_4hHCpby94uF_f25JQJw3h_67ngpHIXhPIe_GnQwmU3xYZ0Y0O7t5CdxQOLEq9Vg",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"productStockList\": [\r\n        {\r\n            \"id\": 5,\r\n            \"quantity\": 10\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/product/stock",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"product",
+								"stock"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const trackingNumber = _.random(10000000, 999999999);\r",
+									"\r",
+									"pm.globals.set('trackingNumber', \"QR\".concat(trackingNumber));\r",
+									"\r",
+									"var moment = require('moment');\r",
+									"\r",
+									"pm.globals.set('currentDate', moment().format((\"YYYY-MM-DD\")));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJQdXlVNV9xVlZkY2RQOWItSDlBWTI3NjdVUEluc1oxZVZtY0pjWVZVcml3In0.eyJleHAiOjE2ODI3NDMwMDksImlhdCI6MTY4Mjc0MjcwOSwianRpIjoiZDA1ZmRmZmYtMjNlMS00NjYzLTljYmMtZTQ4ZWI5ZTMxNmNkIiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo5MDkwL3JlYWxtcy90dXRvcmlhbC1hcGkiLCJhdWQiOlsicmVhbG0tbWFuYWdlbWVudCIsImFjY291bnQiXSwic3ViIjoiY2M0MDUwYjktOTEwYi00OTJmLWI3NDctZjIyMmMyOTJjOTk1IiwidHlwIjoiQmVhcmVyIiwiYXpwIjoic3ByaW5nYm9vdC1rZXljbG9hay1jbGllbnQiLCJzZXNzaW9uX3N0YXRlIjoiN2QyMWI5MDAtYjgzZi00YzQ4LTliOWYtMzFhNzIyZjg5OGRjIiwiYWNyIjoiMSIsImFsbG93ZWQtb3JpZ2lucyI6WyIqIl0sInJlYWxtX2FjY2VzcyI6eyJyb2xlcyI6WyJkZWZhdWx0LXJvbGVzLXR1dG9yaWFsLWFwaSIsIm9mZmxpbmVfYWNjZXNzIiwidW1hX2F1dGhvcml6YXRpb24iLCJhcHBfYWRtaW4iXX0sInJlc291cmNlX2FjY2VzcyI6eyJyZWFsbS1tYW5hZ2VtZW50Ijp7InJvbGVzIjpbIm1hbmFnZS11c2VycyJdfSwic3ByaW5nYm9vdC1rZXljbG9hay1jbGllbnQiOnsicm9sZXMiOlsiYWRtaW4iXX0sImFjY291bnQiOnsicm9sZXMiOlsibWFuYWdlLWFjY291bnQiLCJtYW5hZ2UtYWNjb3VudC1saW5rcyIsInZpZXctcHJvZmlsZSJdfX0sInNjb3BlIjoicHJvZmlsZSBlbWFpbCIsInNpZCI6IjdkMjFiOTAwLWI4M2YtNGM0OC05YjlmLTMxYTcyMmY4OThkYyIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJuYW1lIjoiQWRtaW4iLCJwcmVmZXJyZWRfdXNlcm5hbWUiOiJnbG9iYWxhZG1pbiIsImdpdmVuX25hbWUiOiJBZG1pbiIsImZhbWlseV9uYW1lIjoiIiwiZW1haWwiOiJhZG1pbkBtYWlsLmNvbSJ9.EnKhJf9QMqju6wWaAxRhX-Od3WonRcQnL8Mwe_UWU0wCWlfdrieMkhXTOq8sxme9gLqDKdxfisFBRiSeiR78FIYqOJoivLjz-1YpnOMzDK-uaha7c_Y39ikcxiyZ0ZI9LNRMKzLDxHXga_UOSj7xYFrav2CrmTHF6gz_PvDqeDlyE943TggYpl3byV2qMQYZ_VwlgRh7WqrUbz_qDWqDGIpZDKcRM44t1mZ7DcyOrie4U71GcIqurEprtSkol7UH64X-tFso-abcp8Q5tSsba9pZff8Xe8uRtpyiHcTUwFwjQ1-NnljXsEwgZD3iqj9dMAIUdLIMDittsED97ycczw",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Celular\",\r\n    \"description\": \"Celular de baja gama\",\r\n    \"price\": \"1000000\",\r\n    \"stock\": \"100\",\r\n    \"imageUrl\": \"Celular.com\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/product/3",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"product",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get All",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/product/all",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"product",
+								"all"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get by id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/product/3",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"product",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJQdXlVNV9xVlZkY2RQOWItSDlBWTI3NjdVUEluc1oxZVZtY0pjWVZVcml3In0.eyJleHAiOjE2ODI3NDA3OTksImlhdCI6MTY4Mjc0MDQ5OSwianRpIjoiODgwMjIzZDgtMDlhNS00MzYyLWE1MmYtNjgzMDA0Zjc1MDE3IiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo5MDkwL3JlYWxtcy90dXRvcmlhbC1hcGkiLCJhdWQiOlsicmVhbG0tbWFuYWdlbWVudCIsImFjY291bnQiXSwic3ViIjoiY2M0MDUwYjktOTEwYi00OTJmLWI3NDctZjIyMmMyOTJjOTk1IiwidHlwIjoiQmVhcmVyIiwiYXpwIjoic3ByaW5nYm9vdC1rZXljbG9hay1jbGllbnQiLCJzZXNzaW9uX3N0YXRlIjoiYzdjODA2NGUtYjdjNy00ZDczLTg4MzQtYzBmYTBkODk1NmQ0IiwiYWNyIjoiMSIsImFsbG93ZWQtb3JpZ2lucyI6WyIqIl0sInJlYWxtX2FjY2VzcyI6eyJyb2xlcyI6WyJkZWZhdWx0LXJvbGVzLXR1dG9yaWFsLWFwaSIsIm9mZmxpbmVfYWNjZXNzIiwidW1hX2F1dGhvcml6YXRpb24iLCJhcHBfYWRtaW4iXX0sInJlc291cmNlX2FjY2VzcyI6eyJyZWFsbS1tYW5hZ2VtZW50Ijp7InJvbGVzIjpbIm1hbmFnZS11c2VycyJdfSwic3ByaW5nYm9vdC1rZXljbG9hay1jbGllbnQiOnsicm9sZXMiOlsiYWRtaW4iXX0sImFjY291bnQiOnsicm9sZXMiOlsibWFuYWdlLWFjY291bnQiLCJtYW5hZ2UtYWNjb3VudC1saW5rcyIsInZpZXctcHJvZmlsZSJdfX0sInNjb3BlIjoicHJvZmlsZSBlbWFpbCIsInNpZCI6ImM3YzgwNjRlLWI3YzctNGQ3My04ODM0LWMwZmEwZDg5NTZkNCIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJuYW1lIjoiQWRtaW4iLCJwcmVmZXJyZWRfdXNlcm5hbWUiOiJnbG9iYWxhZG1pbiIsImdpdmVuX25hbWUiOiJBZG1pbiIsImZhbWlseV9uYW1lIjoiIiwiZW1haWwiOiJhZG1pbkBtYWlsLmNvbSJ9.HNAqhJTgQfp7rpcIwE6pu2Ix-jalaRp9SCt-eqNJh_d4a2OuGLQyhPHPwBZSYrecDQb4XzF1_YIETU4jgyvB5nlO7s3TtOJR3R_jwFuFTXCMjacWTcBjpQNBjTFdQQXB0Qi1nSTf-O68nVngAb_FmPGa7cSgKe0yIW79Lu9noAhWeyxSyHTfZ8U4N_El0683aO9RzPAYu6u1-Jf5mO-GHPVB4KaOrzt7BRpOum6GsS-mbgzsAc_DSNpWwrm3clX_siUl2--ryf3-LjlLFcb0XWTm9az1poQAVJaE04X8Lvb6B6KeqJ_gMoxbQqagCp_QcfMynVkpK61aXCR1ndBN6w",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/product/3",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"product",
+								"3"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"frank\",\r\n    \"password\": \"my-new-password\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/auth/signin",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"auth",
+								"signin"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Register",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"frank\",\r\n    \"enabled\": true,\r\n    \"email\": \"hola@hola.com\",\r\n    \"emailVerified\": true,\r\n    \"firstName\": \"frank\",\r\n    \"lastName\": \"frank\",\r\n    \"credentials\": [\r\n        {\r\n            \"type\": \"password\",\r\n            \"temporary\": false,\r\n            \"value\": \"my-new-password\"\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/auth/signup",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"auth",
+								"signup"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "TOKEN Admin keycloak",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "grant_type",
+							"value": "password",
+							"type": "text"
+						},
+						{
+							"key": "client_id",
+							"value": "springboot-keycloak-client",
+							"type": "text"
+						},
+						{
+							"key": "username",
+							"value": "globaladmin",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "admin",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:9090/realms/tutorial-api/protocol/openid-connect/token",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9090",
+					"path": [
+						"realms",
+						"tutorial-api",
+						"protocol",
+						"openid-connect",
+						"token"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Register keycloak",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJQdXlVNV9xVlZkY2RQOWItSDlBWTI3NjdVUEluc1oxZVZtY0pjWVZVcml3In0.eyJleHAiOjE2ODM0MTg5MDEsImlhdCI6MTY4MzQxNTMwMSwianRpIjoiNjMzNjkxZjctNjk1Yy00NzE3LTg5NWQtOGJiYzQ2ODhiOWUzIiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo5MDkwL3JlYWxtcy90dXRvcmlhbC1hcGkiLCJhdWQiOlsicmVhbG0tbWFuYWdlbWVudCIsImFjY291bnQiXSwic3ViIjoiY2M0MDUwYjktOTEwYi00OTJmLWI3NDctZjIyMmMyOTJjOTk1IiwidHlwIjoiQmVhcmVyIiwiYXpwIjoic3ByaW5nYm9vdC1rZXljbG9hay1jbGllbnQiLCJzZXNzaW9uX3N0YXRlIjoiZmJhZGFmMTItMzE4MS00OGE1LTk1YzQtZWFkMzA0MDRjMTJiIiwiYWNyIjoiMSIsImFsbG93ZWQtb3JpZ2lucyI6WyIqIl0sInJlYWxtX2FjY2VzcyI6eyJyb2xlcyI6WyJkZWZhdWx0LXJvbGVzLXR1dG9yaWFsLWFwaSIsIm9mZmxpbmVfYWNjZXNzIiwidW1hX2F1dGhvcml6YXRpb24iLCJhcHBfYWRtaW4iXX0sInJlc291cmNlX2FjY2VzcyI6eyJyZWFsbS1tYW5hZ2VtZW50Ijp7InJvbGVzIjpbIm1hbmFnZS11c2VycyJdfSwic3ByaW5nYm9vdC1rZXljbG9hay1jbGllbnQiOnsicm9sZXMiOlsiYWRtaW4iXX0sImFjY291bnQiOnsicm9sZXMiOlsibWFuYWdlLWFjY291bnQiLCJtYW5hZ2UtYWNjb3VudC1saW5rcyIsInZpZXctcHJvZmlsZSJdfX0sInNjb3BlIjoicHJvZmlsZSBlbWFpbCIsInNpZCI6ImZiYWRhZjEyLTMxODEtNDhhNS05NWM0LWVhZDMwNDA0YzEyYiIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJuYW1lIjoiQWRtaW4iLCJwcmVmZXJyZWRfdXNlcm5hbWUiOiJnbG9iYWxhZG1pbiIsImdpdmVuX25hbWUiOiJBZG1pbiIsImZhbWlseV9uYW1lIjoiIiwiZW1haWwiOiJhZG1pbkBtYWlsLmNvbSJ9.iBwJ27ZuXCe-_8AiFJiU9cGyFid1tCU1b4sqixGro0nLWyZviCJjC1odXLIhD4q9LlF7uoGFIx1jMhTE37rKLUpS5BEinpTVPo8Rh77YplF6J5zaKbLT5nB3ZxZFdlSvVcRobtqchIXxzK4jMg1IdW7KN7ll3VMmBK3ajSRXpsD2mUvmEbjOF7IQPVUE21VI7XogIYoFHEAKepqJ838B3HvRtjAYRMBwI43gW-7i6Rl3tTKPFVlzPCMQGhnsLUEdiqqzs3QaKiw0DV04BQ4wjTn_8z99RpcMHvVyy4oOThXnJd9RbL3JZFw_10vHIHsZeGmU2ONdmzCQOo4tKH7E8w",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"frank\",\r\n    \"enabled\": true,\r\n    \"email\": \"hola@hola.com\",\r\n    \"emailVerified\": true,\r\n    \"firstName\": \"frank\",\r\n    \"lastName\": \"frank\",\r\n    \"clientRoles\": {\r\n        \"springboot-keycloak-client\": [\"user\"]\r\n    },\r\n    \"credentials\": [\r\n        {\r\n            \"type\": \"password\",\r\n            \"temporary\": false,\r\n            \"value\": \"my-new-password\"\r\n        }\r\n    ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:9090/admin/realms/tutorial-api/users",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9090",
+					"path": [
+						"admin",
+						"realms",
+						"tutorial-api",
+						"users"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

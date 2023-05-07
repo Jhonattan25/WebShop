@@ -6,7 +6,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-@FeignClient(name = "keycloak", url = "${ruta.keycloak}")
+@FeignClient(name = "keycloakLogin", url = "${ruta.keycloak}/realms/tutorial-api/protocol/openid-connect")
 public interface OAuthFeingClient {
     @PostMapping(value = "/token", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     TokenDTO getToken(@RequestBody String formData);

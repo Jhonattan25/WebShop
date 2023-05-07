@@ -1,7 +1,11 @@
 package co.edu.uniquindio.webshop.dto;
 
-import java.math.BigDecimal;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-public record NewUserDTO(String name, String description, BigDecimal price, int stock, String imageUrl){
+import java.util.ArrayList;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
+public record NewUserDTO(String username, String enabled, String email, boolean emailVerified,
+                         String firstName, String lastName,ArrayList<Credential> credentials){
 
 }

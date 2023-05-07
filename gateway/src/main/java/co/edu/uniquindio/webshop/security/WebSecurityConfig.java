@@ -28,11 +28,11 @@ public class WebSecurityConfig {
         http.authorizeExchange( e ->
                     e.pathMatchers("/api/auth/**").permitAll()
                             .pathMatchers(HttpMethod.GET,"/api/product/all").permitAll()
-                            .pathMatchers(HttpMethod.PUT,"/api/product/stock").hasRole(ADMIN)
+                            .pathMatchers(HttpMethod.PUT,"/api/product/stock").hasAnyRole(ADMIN, USER)
                             .pathMatchers(HttpMethod.GET,"/api/product/{idProduct}").permitAll()
                             .pathMatchers(HttpMethod.PUT,"/api/product/{idProduct}").hasRole(ADMIN)
                             .pathMatchers(HttpMethod.DELETE,"/api/product/{idProduct}").hasRole(ADMIN)
-                            .pathMatchers(HttpMethod.POST,"/api/product").hasAnyRole(ADMIN)
+                            .pathMatchers(HttpMethod.POST,"/api/product").hasRole(ADMIN)
                             .anyExchange().authenticated());
 
         http.oauth2ResourceServer()
