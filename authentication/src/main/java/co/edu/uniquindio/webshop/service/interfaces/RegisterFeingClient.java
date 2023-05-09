@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 
-@FeignClient(name = "keycloakRegister", url = "${ruta.keycloak}/admin/realms/tutorial-api")
+@FeignClient(name = "keycloakRegister", url = "${ruta.keycloak}/admin/realms/webshop-api")
 public interface RegisterFeingClient {
     @PostMapping("/users")
     void registerUser(@RequestHeader("Authorization") String token, @RequestBody NewUserDTO newUser);
