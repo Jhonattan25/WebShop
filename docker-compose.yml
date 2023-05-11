@@ -35,6 +35,23 @@ services:
     networks:
       - net_webShop
 
+  authentication-service:
+    build:
+      context: ./authentication
+      dockerfile: Dockerfile
+    container_name: authentication-service
+    depends_on:
+      eureka-server:
+        condition: service_started
+    environment:
+      - SPRING_APPLICATION_NAME=authentication-service
+      - EUREKA_CLIENT_SERVICE-URL_DEFAULTZONE=http://eureka-server:8761/eureka/
+      - KEYCLOACK_ADMIN-URL=http://keycloak:8080/admin/realms/tutorial-api
+      - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER-URI=http://keycloak:8080/realms/tutorial-api
+      - EUREKA_CLIENT_SERVICE-URL_DEFAULTZONE=http://eureka-server:8761/eureka
+    networks:
+      - net_webShop
+
   gateway-service:
     build:
       context: ./gateway

@@ -1,14 +1,10 @@
 # WebShop
 El microservicio de gestión del catálago de productos le permitirá a los consumidores crear, actualizar, mostrar y eliminar información sobre los productos que se venden en la tienda en línea WebShop.
 
-## Indicar la ruta del volumen
-##### Unix
-En Unix y en sistemas similares como Linux y macOS, se puede usar la variable de entorno $PWD para indicar la ruta actual
-##### Ejemplo Unix
-docker run -p 9090:8080 -e KEYCLOAK_ADMIN=admin -e KEYCLOAK_ADMIN_PASSWORD=admin -d --rm --volume $PWD:/opt/keycloak/data/ quay.io/keycloak/keycloak:21.0.2 start-dev
+## Cargar el volumen en el docker local
 
+### 1. Ejecutar el docker-compose
+Lo primero que se debe hacer es ejecutar el comando docker-compose up -d para que este cree el volumen en el docker local
 
-##### Windows
-En Windows, la variable equivalente sería %CD%
-##### Ejemplo Windows
-docker run -p 9090:8080 -e KEYCLOAK_ADMIN=admin -e KEYCLOAK_ADMIN_PASSWORD=admin -d --rm --volume %CD%:/opt/keycloak/data/ quay.io/keycloak/keycloak:21.0.2 start-dev
+### 2. Correr el comando para cargar el volumen
+En este paso se debe estar ubicados en la carpeta backup del proyecto y luego ejecutar el comando "sudo bash ./backup_docker_volume.sh codimd_database-data backup1.tar" para que este cargue el volumen del proyecto en el docker local.
