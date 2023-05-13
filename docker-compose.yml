@@ -46,9 +46,8 @@ services:
     environment:
       - SPRING_APPLICATION_NAME=authentication-service
       - EUREKA_CLIENT_SERVICE-URL_DEFAULTZONE=http://eureka-server:8761/eureka/
-      - KEYCLOACK_ADMIN-URL=http://keycloak:8080/admin/realms/tutorial-api
-      - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER-URI=http://keycloak:8080/realms/tutorial-api
-      - EUREKA_CLIENT_SERVICE-URL_DEFAULTZONE=http://eureka-server:8761/eureka
+      - KEYCLOACK_ADMIN-URL=http://keycloak-service:8080/admin/realms/webshop-api
+      - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER-URI=http://keycloak-service:8080/realms/webshop-api
     networks:
       - net_webShop
 
@@ -65,6 +64,8 @@ services:
     environment:
       - SPRING_APPLICATION_NAME=gateway-service
       - EUREKA_CLIENT_SERVICE-URL_DEFAULTZONE=http://eureka-server:8761/eureka/
+      - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER-URI=http://keycloak-service:8080/realms/webshop-api
+      - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK-SET-URI=http://keycloak-service:8080/realms/webshop-api/protocol/openid-connect/certs
     ports:
       - 8080:8080
     networks:
