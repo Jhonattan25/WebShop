@@ -8,7 +8,7 @@ services:
     build:
       context: ./eureka-server
       dockerfile: Dockerfile
-    container_name: eureka-server-webShop
+    container_name: eureka-server-webshop
     ports:
       - 8761:8761
     networks:
@@ -18,7 +18,7 @@ services:
     build:
       context: ./product
       dockerfile: Dockerfile
-    container_name: product-service
+    container_name: product-service-webshop
     depends_on:
       mariadb-service:
         condition: service_started
@@ -39,15 +39,16 @@ services:
     build:
       context: ./authentication
       dockerfile: Dockerfile
-    container_name: authentication-service
+    container_name: authentication-service-webshop
     depends_on:
       eureka-server:
         condition: service_started
     environment:
       - SPRING_APPLICATION_NAME=authentication-service
       - EUREKA_CLIENT_SERVICE-URL_DEFAULTZONE=http://eureka-server:8761/eureka/
-      - KEYCLOACK_ADMIN-URL=http://keycloak-service:8080/admin/realms/webshop-api
-      - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER-URI=http://keycloak-service:8080/realms/webshop-api
+      - RUTA_KEYCLOAK=http://keycloak-service:8080
+      - ADMIN_USERNAME=globaladmin
+      - ADMIN_PASSWORD=admin
     networks:
       - net_webShop
 
@@ -55,11 +56,13 @@ services:
     build:
       context: ./gateway
       dockerfile: Dockerfile
-    container_name: gateway-service-webShop
+    container_name: gateway-service-webshop
     depends_on:
       eureka-server:
         condition: service_started
       product-service:
+        condition: service_started
+      authentication-service:
         condition: service_started
     environment:
       - SPRING_APPLICATION_NAME=gateway-service
@@ -73,7 +76,7 @@ services:
 
   mariadb-service:
     image: 'mariadb'
-    container_name: mariadb-service-webShop
+    container_name: mariadb-service-webshop
     environment:
       - MARIADB_DATABASE=product
       - MARIADB_USER=root
@@ -86,7 +89,7 @@ services:
 
   keycloak-service:
     image: 'quay.io/keycloak/keycloak:21.0.2'
-    container_name: keycloak-service-webShop
+    container_name: keycloak-service-webshop
     environment:
       - KEYCLOAK_ADMIN=admin
       - KEYCLOAK_ADMIN_PASSWORD=admin

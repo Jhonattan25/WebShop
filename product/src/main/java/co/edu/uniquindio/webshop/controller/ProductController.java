@@ -26,7 +26,7 @@ public class ProductController {
 
     @GetMapping("/all")
     public ResponseEntity<Response<List<ProductResponse>>> findAll(){
-        return ResponseEntity.status(HttpStatus.OK).body( new Response<>("", productService.findAll()) );
+        return ResponseEntity.status(HttpStatus.OK).body( new Response<>("Productos consultados correctamente", productService.findAll()) );
     }
 
     @PutMapping("/{idProduct}")
