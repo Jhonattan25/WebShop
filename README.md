@@ -7,4 +7,4 @@ El microservicio de gestión del catálago de productos le permitirá a los cons
 Lo primero que se debe hacer es ejecutar el comando docker-compose up -d para que este cree el volumen en el docker local
 
 ### 2. Correr el comando para cargar el volumen
-En este paso se debe estar ubicados en la carpeta backup del proyecto y luego ejecutar el comando "sudo bash ./backup_docker_volume.sh codimd_database-data backup1.tar" para que este cargue el volumen del proyecto en el docker local.
+En este paso se debe estar ubicados en la carpeta backup del proyecto y luego ejecutar el comando "sudo bash ./restore_docker_volume.sh webshop_keycloak_data datadb.tar" para que este cargue el volumen del proyecto en el docker local.
