@@ -1,20 +1,24 @@
 package co.edu.uniquindio.webshop.service;
 
-import co.edu.uniquindio.webshop.dto.LoginDTO;
-import co.edu.uniquindio.webshop.dto.NewUserDTO;
-import co.edu.uniquindio.webshop.dto.TokenDTO;
+import co.edu.uniquindio.webshop.dto.*;
 import co.edu.uniquindio.webshop.service.interfaces.OAuthFeingClient;
-import co.edu.uniquindio.webshop.service.interfaces.RegisterFeingClient;
+import co.edu.uniquindio.webshop.service.interfaces.UserFeingClient;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 @AllArgsConstructor
 public class LoginService {
 
     private final OAuthFeingClient oAuthFeingClient;
-    private final RegisterFeingClient registerFeingClient;
+    private final UserFeingClient userFeingClient;
 
     @Value("${admin.username}")
     private String userName;
@@ -29,11 +33,6 @@ public class LoginService {
     *
     * */
     public TokenDTO login(LoginDTO loginDTO){
-
-        System.out.println("Credenciales: "+loginDTO);
-
-        System.out.println("userName: "+loginDTO.username());
-        System.out.println("password: "+loginDTO.password());
 
         StringBuilder formData = new StringBuilder();
 
@@ -58,7 +57,24 @@ public class LoginService {
     }
 
     public TokenDTO refresh(TokenDTO token){
-        return new TokenDTO("Hello");
+
+        StringBuilder formData = new StringBuilder();
+
+        formData.append("client_id=");
+        formData.append("springboot-keycloak-client");
+        formData.append("&");
+        formData.append("refresh_token=");
+        formData.append(token.refreshToken());
+        formData.append("&");
+        formData.append("grant_type=");
+        formData.append("refresh_token");
+
+        try {
+            TokenDTO tokenDTO = oAuthFeingClient.getToken(formData.toString());
+            return tokenDTO;
+        }catch (Exception e){
+            throw new RuntimeException("Hubo un error recuperando el token");
+        }
     }
 
     /*
@@ -69,8 +85,16 @@ public class LoginService {
         LoginDTO loginDTO = getCredentials();
         String token = "Bearer "+login(loginDTO).accessToken();
 
+        UserDTO userDTO = convertToUser(newUserDTO);
+
         try {
-            registerFeingClient.registerUser(token, newUserDTO);
+
+            userFeingClient.registerUser(token, userDTO);
+
+            String userId = getUserId(newUserDTO.username(), token);
+
+            setRoleUser(userId, token);
+
             return true;
         } catch (Exception e) {
             throw new RuntimeException("Hubo un error registrando el usuario");
@@ -82,5 +106,47 @@ public class LoginService {
                 .username(userName)
                 .password(password)
                 .build();
+    }
+
+    private UserDTO convertToUser(NewUserDTO newUserDTO) {
+
+        Map<String, Object> credentials = new HashMap<>();
+        credentials.put("type", "password");
+        credentials.put("value", newUserDTO.password());
+        credentials.put("temporary", false);
+
+        return UserDTO.builder()
+                .username(newUserDTO.username())
+                .enabled(true)
+                .firstName(newUserDTO.firstName())
+                .lastName(newUserDTO.lastName())
+                .email(newUserDTO.email())
+                .emailVerified(true)
+                .credentials(List.of(credentials))
+                .build();
+
+    }
+
+    private String getUserId(String username, String tokenAdmin){
+
+        try {
+            List<ResponseGetUserDTO> listResponseGetUserDTO = userFeingClient.getUserId(username, tokenAdmin);
+            return listResponseGetUserDTO.get(0).id();
+        } catch (Exception e) {
+            throw new RuntimeException("Hubo un error asignando el rol al usuario");
+        }
+    }
+
+    private void setRoleUser(String userID, String tokenAdmin){
+
+        Map<String, String> role = new HashMap<>();
+        role.put("id", "17a75097-d54f-4860-a37b-837990008f3a");
+        role.put("name", "app_user");
+
+        try {
+            userFeingClient.setRole(tokenAdmin, userID,  List.of(role));
+        } catch (Exception e) {
+            throw new RuntimeException("Hubo un error asignando el rol al usuario");
+        }
     }
 }

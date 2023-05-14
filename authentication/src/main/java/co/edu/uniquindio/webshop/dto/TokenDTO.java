@@ -6,5 +6,5 @@ import lombok.Builder;
 
 @Builder
 @JsonIgnoreProperties(ignoreUnknown = true)
-public record TokenDTO(@JsonProperty("access_token") String accessToken){
+public record TokenDTO(@JsonProperty("access_token") String accessToken,@JsonProperty("refresh_token") String refreshToken){
 }

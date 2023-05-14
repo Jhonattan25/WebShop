@@ -25,12 +25,10 @@ public class AuthenticationController {
         return ResponseEntity.status(HttpStatus.OK).body(new Response<>("Login correcto", loginService.login(loginDTO)) );
     }
 
-
     @PostMapping("/refresh")
     public ResponseEntity<Response<TokenDTO>> refresh(@RequestBody TokenDTO token) throws Exception{
-        return ResponseEntity.status(HttpStatus.OK).body(new Response<>("", loginService.refresh(token)) );
+        return ResponseEntity.status(HttpStatus.OK).body(new Response<>("Refresh correcto", loginService.refresh(token)) );
     }
-
 
     @PostMapping("/signup")
     public ResponseEntity<Response<String>> createUser(@RequestBody NewUserDTO newUserDTO) throws Exception{
