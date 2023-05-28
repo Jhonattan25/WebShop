@@ -5,7 +5,7 @@ plugins {
 }
 
 
-group = 'co.edu.uniquindio.biblioteca'
+group = 'co.edu.uniquindio.webshop'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '17'
 
@@ -24,6 +24,9 @@ ext {
 dependencies {
     implementation 'org.springframework.cloud:spring-cloud-starter-gateway'
     implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
+    implementation 'org.projectlombok:lombok:1.18.22'
+    annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 

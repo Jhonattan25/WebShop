@@ -1,37 +1,24 @@
 version: '3.7'
 
+volumes:
+  keycloak_data:
+
 services:
   eureka-server:
     build:
       context: ./eureka-server
       dockerfile: Dockerfile
-    container_name: eureka-server
+    container_name: eureka-server-webshop
     ports:
       - 8761:8761
     networks:
-      - net_biblioteca
+      - net_webShop
 
-  cliente-service:
+  product-service:
     build:
-      context: ./clientes
+      context: ./product
       dockerfile: Dockerfile
-    depends_on:
-      mongo-service:
-        condition: service_started
-      eureka-server:
-        condition: service_started
-    environment:
-      - SPRING_DATA_MONGODB_URI=mongodb://root:root@mongo-service:27017/clientes?authSource=admin
-      - SPRING_APPLICATION_NAME=cliente-service
-      - EUREKA_CLIENT_SERVICE-URL_DEFAULTZONE=http://eureka-server:8761/eureka/
-    networks:
-      - net_biblioteca
-
-  libro-service:
-    build:
-      context: ./libros
-      dockerfile: Dockerfile
-    container_name: libro-service
+    container_name: product-service-webshop
     depends_on:
       mariadb-service:
         condition: service_started
@@ -39,109 +26,104 @@ services:
         condition: service_started
     environment:
       - SPRING_DATASOURCE_DRIVER-CLASS-NAME=com.mysql.cj.jdbc.Driver
-      - SPRING_DATASOURCE_URL=jdbc:mysql://mariadb-service:3306/libros?createDatabaseIfNotExist=true
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mariadb-service:3306/product?createDatabaseIfNotExist=true
       - SPRING_DATASOURCE_USERNAME=root
       - SPRING_DATASOURCE_PASSWORD=root
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
-      - SPRING_APPLICATION_NAME=libro-service
+      - SPRING_APPLICATION_NAME=product-service
       - EUREKA_CLIENT_SERVICE-URL_DEFAULTZONE=http://eureka-server:8761/eureka/
     networks:
-      - net_biblioteca
+      - net_webShop
 
-  prestamo-service:
+  purchase-service:
     build:
-      context: ./prestamos
+      context: ./purchase-service
       dockerfile: Dockerfile
-    container_name: prestamo-service
+    container_name: purchase-service-webshop
     depends_on:
-      mariadb-prestamos:
+      mariadb-service:
         condition: service_started
+    environment:
+      - DB_HOST=mariadb-service
+      - DB_USER=root
+      - DB_PASS=root
+      - DB_DATABASE=purchase
+      - TABLE_PURCHASE=purchase
+      - GATEWAY_SERVICE=http://gateway-service:8080/
+    networks:
+      - net_webShop
+
+  authentication-service:
+    build:
+      context: ./authentication
+      dockerfile: Dockerfile
+    container_name: authentication-service-webshop
+    depends_on:
       eureka-server:
         condition: service_started
     environment:
-      - SPRING_DATASOURCE_DRIVER-CLASS-NAME=com.mysql.cj.jdbc.Driver
-      - SPRING_DATASOURCE_URL=jdbc:mysql://mariadb-prestamos:3306/prestamos?createDatabaseIfNotExists
-      - SPRING_DATASOURCE_USERNAME=root
-      - SPRING_DATASOURCE_PASSWORD=root
-      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
-      - SPRING_APPLICATION_NAME=prestamo-service
+      - SPRING_APPLICATION_NAME=authentication-service
       - EUREKA_CLIENT_SERVICE-URL_DEFAULTZONE=http://eureka-server:8761/eureka/
+      - RUTA_KEYCLOAK=http://keycloak-service:8080
+      - ADMIN_USERNAME=globaladmin
+      - ADMIN_PASSWORD=admin
+      - ROLEID_USER=17a75097-d54f-4860-a37b-837990008f3a
     networks:
-      - net_biblioteca
+      - net_webShop
 
   gateway-service:
     build:
       context: ./gateway
       dockerfile: Dockerfile
-    container_name: gateway-service
+    container_name: gateway-service-webshop
     depends_on:
       eureka-server:
         condition: service_started
-      cliente-service:
+      product-service:
         condition: service_started
-      libro-service:
+      authentication-service:
         condition: service_started
-      prestamo-service:
+      purchase-service:
         condition: service_started
     environment:
       - SPRING_APPLICATION_NAME=gateway-service
       - EUREKA_CLIENT_SERVICE-URL_DEFAULTZONE=http://eureka-server:8761/eureka/
+      - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER-URI=http://keycloak-service:8080/realms/webshop-api
+      - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK-SET-URI=http://keycloak-service:8080/realms/webshop-api/protocol/openid-connect/certs
     ports:
       - 8080:8080
     networks:
-      - net_biblioteca
-
-  mongo-service:
-    image: mongo
-    container_name: mongo-service
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: root
-    ports:
-      - 27017:27017
-    networks:
-      - net_biblioteca
-
-  mongo-express:
-    image: mongo-express
-    container_name: mongo-express
-    depends_on:
-      mongo-service:
-        condition: service_started
-    ports:
-      - 8081:8081
-    environment:
-      ME_CONFIG_MONGODB_ADMINUSERNAME: root
-      ME_CONFIG_MONGODB_ADMINPASSWORD: root
-      ME_CONFIG_MONGODB_URL: mongodb://root:root@mongo-service:27017/
-    networks:
-      - net_biblioteca
+      - net_webShop
 
   mariadb-service:
     image: 'mariadb'
-    container_name: mariadb-service
+    container_name: mariadb-service-webshop
     environment:
-      - MARIADB_DATABASE=ejemplo
+      - MARIADB_DATABASE=product
       - MARIADB_USER=root
       - MARIADB_PASSWORD=root
       - MARIADB_ROOT_PASSWORD=root
     volumes:
       - ./Config/mysql:/var/lib/mysql
     networks:
-      - net_biblioteca
+      - net_webShop
 
-  mariadb-prestamos:
-    image: 'mariadb'
-    container_name: mariadb-prestamos
+  keycloak-service:
+    image: 'quay.io/keycloak/keycloak:21.0.2'
+    container_name: keycloak-service-webshop
     environment:
-      - MARIADB_DATABASE=prestamos
-      - MARIADB_USER=root
-      - MARIADB_PASSWORD=root
-      - MARIADB_ROOT_PASSWORD=root
+      - KEYCLOAK_ADMIN=admin
+      - KEYCLOAK_ADMIN_PASSWORD=admin
+    ports:
+      - 9090:8080
+    command:
+      - 'start-dev'
+    volumes:
+      - keycloak_data:/opt/keycloak/data/
     networks:
-      - net_biblioteca
+      - net_webShop
 
 networks:
-  net_biblioteca:
+  net_webShop:
     driver: bridge
-    name: net_biblioteca
+    name: net_webShop

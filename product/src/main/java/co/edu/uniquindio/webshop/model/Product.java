@@ -35,4 +35,6 @@ public class Product implements Serializable {
     @Column
     private String imageUrl;
 
+    @Column
+    private Boolean isActive;
 }
