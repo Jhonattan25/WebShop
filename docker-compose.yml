@@ -35,6 +35,24 @@ services:
     networks:
       - net_webShop
 
+  purchase-service:
+    build:
+      context: ./purchase-service
+      dockerfile: Dockerfile
+    container_name: purchase-service-webshop
+    depends_on:
+      mariadb-service:
+        condition: service_started
+    environment:
+      - DB_HOST=mariadb-service
+      - DB_USER=root
+      - DB_PASS=root
+      - DB_DATABASE=purchase
+      - TABLE_PURCHASE=purchase
+      - GATEWAY_SERVICE=http://gateway-service:8080/
+    networks:
+      - net_webShop
+
   authentication-service:
     build:
       context: ./authentication
@@ -49,6 +67,7 @@ services:
       - RUTA_KEYCLOAK=http://keycloak-service:8080
       - ADMIN_USERNAME=globaladmin
       - ADMIN_PASSWORD=admin
+      - ROLEID_USER=17a75097-d54f-4860-a37b-837990008f3a
     networks:
       - net_webShop
 
@@ -63,6 +82,8 @@ services:
       product-service:
         condition: service_started
       authentication-service:
+        condition: service_started
+      purchase-service:
         condition: service_started
     environment:
       - SPRING_APPLICATION_NAME=gateway-service
