@@ -18,6 +18,8 @@ import java.util.stream.Collectors;
 public class ProductService {
 
     private final ProductRepository productRepo;
+    private final String PRODUCT_STOCK_ERROR = "El Producto no tiene stock";
+    private final String PRODUCT_NOT_FOUND = "El Producto no existe";
 
     public ProductResponse save(ProductPOST product){
         return convert(productRepo.save(convert(product)));
@@ -30,7 +32,8 @@ public class ProductService {
     }
 
     public Product findById(long id){
-        return productRepo.findByIdAndIsActive(id,true).orElseThrow(() -> new ProductNotFoundException("El Producto no existe"));
+        return productRepo.findByIdAndIsActive(id,true)
+                .orElseThrow(() -> new ProductNotFoundException(PRODUCT_NOT_FOUND));
     }
     public ProductResponse findByIdProduct(long id){
         return convert(findById(id));
@@ -57,7 +60,7 @@ public class ProductService {
         Product product = findById(id);
         int qty =productStockDTO.quantity();
         if (product.getStock() < qty){
-            throw new ProductNotFoundException("El Producto no tiene stock");
+            throw new ProductNotFoundException(PRODUCT_STOCK_ERROR);
         }
         product.setStock(product.getStock() - qty);
         return product;
