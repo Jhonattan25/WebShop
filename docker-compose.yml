@@ -4,11 +4,27 @@ volumes:
   keycloak_data:
 
 services:
+  config-server:
+    build:
+      context: ./config-server
+      dockerfile: Dockerfile
+    container_name: config-server-webshop
+    ports:
+      - 8888:8888
+    environment:
+      - SPRING_CLOUD_CONFIG_SERVER_GIT_DEFAULT-LABEL=config-server
+      - SPRING_CLOUD_CONFIG_SERVER_GIT_URI=https://github.com/Jhonattan25/WebShop
+    networks:
+      - net_webShop
+
   eureka-server:
     build:
       context: ./eureka-server
       dockerfile: Dockerfile
     container_name: eureka-server-webshop
+    depends_on:
+      config-server:
+        condition: service_started
     ports:
       - 8761:8761
     networks:
@@ -32,8 +48,11 @@ services:
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
       - SPRING_APPLICATION_NAME=product-service
       - EUREKA_CLIENT_SERVICE-URL_DEFAULTZONE=http://eureka-server:8761/eureka/
+      - SPRING_CLOUD_CONFIG_URI=http://config-server:8888
+      - SPRING_CLOUD_CONFIG_PROFILE=prod
     networks:
       - net_webShop
+    restart: on-failure
 
   purchase-service:
     build:
@@ -65,11 +84,14 @@ services:
       - SPRING_APPLICATION_NAME=authentication-service
       - EUREKA_CLIENT_SERVICE-URL_DEFAULTZONE=http://eureka-server:8761/eureka/
       - RUTA_KEYCLOAK=http://keycloak-service:8080
+      - SPRING_CLOUD_CONFIG_URI=http://config-server:8888
+      - SPRING_CLOUD_CONFIG_PROFILE=prod
       - ADMIN_USERNAME=globaladmin
       - ADMIN_PASSWORD=admin
       - ROLEID_USER=17a75097-d54f-4860-a37b-837990008f3a
     networks:
       - net_webShop
+    restart: on-failure
 
   gateway-service:
     build:
@@ -90,10 +112,13 @@ services:
       - EUREKA_CLIENT_SERVICE-URL_DEFAULTZONE=http://eureka-server:8761/eureka/
       - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER-URI=http://keycloak-service:8080/realms/webshop-api
       - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK-SET-URI=http://keycloak-service:8080/realms/webshop-api/protocol/openid-connect/certs
+      - SPRING_CLOUD_CONFIG_URI=http://config-server:8888
+      - SPRING_CLOUD_CONFIG_PROFILE=prod
     ports:
       - 8080:8080
     networks:
       - net_webShop
+    restart: on-failure
 
   mariadb-service:
     image: 'mariadb'
