@@ -6,6 +6,7 @@ import co.edu.uniquindio.webshop.dto.ProductStocksQtyDTO;
 import co.edu.uniquindio.webshop.dto.Response;
 import co.edu.uniquindio.webshop.service.ProductService;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +18,11 @@ import java.util.List;
 @RequestMapping("/api/product")
 public class ProductController {
 
+
     private final ProductService productService;
+
+    @Value("${app.mensaje}")
+    private String mensaje;
 
     @PostMapping
     public ResponseEntity<Response<ProductResponse>> save(@RequestBody ProductPOST productPOST){
@@ -54,5 +59,10 @@ public class ProductController {
         productService.validateStocks(productStocksQtyDTO);
         return ResponseEntity.status(HttpStatus.OK).body( new Response<>(
                 "Productos existentes y actualizados correctamente"));
+    }
+
+    @GetMapping("/test-prop")
+    public String getTestProperty(){
+        return mensaje;
     }
 }

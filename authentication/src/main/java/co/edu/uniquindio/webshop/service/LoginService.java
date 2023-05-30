@@ -20,12 +20,18 @@ public class LoginService {
     private final OAuthFeingClient oAuthFeingClient;
     private final UserFeingClient userFeingClient;
 
+    private final String TOKEN_ERROR = "Hubo un error recuperando el token";
+    private final String USER_ROLE_ERROR = "Hubo un error asignando el rol al usuarion";
+    private final String USER_REGISTER_ERROR = "Hubo un error registrando el usuario";
+
     @Value("${admin.username}")
     private String userName;
 
     @Value("${admin.password}")
     private String password;
 
+    @Value("${roleId.user}")
+    private String roleIdUser;
 
     /*
     * Para hacer el login (inicio de sesión) simplemente puede hacer una petición al endpoint
@@ -52,7 +58,7 @@ public class LoginService {
            TokenDTO tokenDTO = oAuthFeingClient.getToken(formData.toString());
            return tokenDTO;
        }catch (Exception e){
-           throw new RuntimeException("Hubo un error recuperando el token");
+           throw new RuntimeException(TOKEN_ERROR);
        }
     }
 
@@ -73,13 +79,10 @@ public class LoginService {
             TokenDTO tokenDTO = oAuthFeingClient.getToken(formData.toString());
             return tokenDTO;
         }catch (Exception e){
-            throw new RuntimeException("Hubo un error recuperando el token");
+            throw new RuntimeException(TOKEN_ERROR);
         }
     }
 
-    /*
-    * Para el registro: https://www.keycloak.org/docs-api/15.0/rest-api/index.html#_users_resource
-    * */
     public Boolean createUser(NewUserDTO newUserDTO){
 
         LoginDTO loginDTO = getCredentials();
@@ -97,7 +100,7 @@ public class LoginService {
 
             return true;
         } catch (Exception e) {
-            throw new RuntimeException("Hubo un error registrando el usuario");
+            throw new RuntimeException(USER_REGISTER_ERROR);
         }
     }
 
@@ -133,20 +136,19 @@ public class LoginService {
             List<ResponseGetUserDTO> listResponseGetUserDTO = userFeingClient.getUserId(username, tokenAdmin);
             return listResponseGetUserDTO.get(0).id();
         } catch (Exception e) {
-            throw new RuntimeException("Hubo un error asignando el rol al usuario");
+            throw new RuntimeException(USER_ROLE_ERROR);
         }
     }
 
     private void setRoleUser(String userID, String tokenAdmin){
-
         Map<String, String> role = new HashMap<>();
-        role.put("id", "17a75097-d54f-4860-a37b-837990008f3a");
+        role.put("id", roleIdUser);
         role.put("name", "app_user");
 
         try {
             userFeingClient.setRole(tokenAdmin, userID,  List.of(role));
         } catch (Exception e) {
-            throw new RuntimeException("Hubo un error asignando el rol al usuario");
+            throw new RuntimeException(USER_ROLE_ERROR);
         }
     }
 }

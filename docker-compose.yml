@@ -4,15 +4,41 @@ volumes:
   keycloak_data:
 
 services:
+  config-server:
+    build:
+      context: ./config-server
+      dockerfile: Dockerfile
+    container_name: config-server-webshop
+    ports:
+      - 8888:8888
+#    environment:
+#      - SPRING_CLOUD_CONFIG_SERVER_GIT_DEFAULT-LABEL=config-server
+#      - SPRING_CLOUD_CONFIG_SERVER_GIT_URI=https://github.com/Jhonattan25/WebShop
+    networks:
+      - net_webShop
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8888/actuator/health || exit 1"]
+      interval: 60s
+      timeout: 10s
+      retries: 12
+
   eureka-server:
     build:
       context: ./eureka-server
       dockerfile: Dockerfile
     container_name: eureka-server-webshop
+    depends_on:
+      config-server:
+        condition: service_healthy
     ports:
       - 8761:8761
     networks:
       - net_webShop
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8761/actuator/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
 
   product-service:
     build:
@@ -23,17 +49,20 @@ services:
       mariadb-service:
         condition: service_started
       eureka-server:
-        condition: service_started
-    environment:
-      - SPRING_DATASOURCE_DRIVER-CLASS-NAME=com.mysql.cj.jdbc.Driver
-      - SPRING_DATASOURCE_URL=jdbc:mysql://mariadb-service:3306/product?createDatabaseIfNotExist=true
-      - SPRING_DATASOURCE_USERNAME=root
-      - SPRING_DATASOURCE_PASSWORD=root
-      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
-      - SPRING_APPLICATION_NAME=product-service
-      - EUREKA_CLIENT_SERVICE-URL_DEFAULTZONE=http://eureka-server:8761/eureka/
+        condition: service_healthy
+#    environment:
+#      - SPRING_DATASOURCE_DRIVER-CLASS-NAME=com.mysql.cj.jdbc.Driver
+#      - SPRING_DATASOURCE_URL=jdbc:mysql://mariadb-service:3306/product?createDatabaseIfNotExist=true
+#      - SPRING_DATASOURCE_USERNAME=root
+#      - SPRING_DATASOURCE_PASSWORD=root
+#      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+#      - SPRING_APPLICATION_NAME=product-service
+#      - EUREKA_CLIENT_SERVICE-URL_DEFAULTZONE=http://eureka-server:8761/eureka/
+#      - SPRING_CLOUD_CONFIG_URI=http://config-server:8888
+#      - SPRING_CLOUD_CONFIG_PROFILE=prod
     networks:
       - net_webShop
+    restart: on-failure
 
   purchase-service:
     build:
@@ -43,6 +72,8 @@ services:
     depends_on:
       mariadb-service:
         condition: service_started
+      eureka-server:
+        condition: service_healthy
     environment:
       - DB_HOST=mariadb-service
       - DB_USER=root
@@ -52,6 +83,7 @@ services:
       - GATEWAY_SERVICE=http://gateway-service:8080/
     networks:
       - net_webShop
+    restart: on-failure
 
   authentication-service:
     build:
@@ -60,16 +92,20 @@ services:
     container_name: authentication-service-webshop
     depends_on:
       eureka-server:
-        condition: service_started
-    environment:
-      - SPRING_APPLICATION_NAME=authentication-service
-      - EUREKA_CLIENT_SERVICE-URL_DEFAULTZONE=http://eureka-server:8761/eureka/
-      - RUTA_KEYCLOAK=http://keycloak-service:8080
-      - ADMIN_USERNAME=globaladmin
-      - ADMIN_PASSWORD=admin
-      - ROLEID_USER=17a75097-d54f-4860-a37b-837990008f3a
+        condition: service_healthy
+#    environment:
+#      - SPRING_APPLICATION_NAME=authentication-service
+#      - EUREKA_CLIENT_SERVICE-URL_DEFAULTZONE=http://eureka-server:8761/eureka/
+#      - RUTA_KEYCLOAK=http://keycloak-service:8080
+#      - SPRING_CLOUD_CONFIG_URI=http://config-server:8888
+#      - SPRING_CLOUD_CONFIG_PROFILE=prod
+#      - ADMIN_USERNAME=globaladmin
+#      - ADMIN_PASSWORD=admin
+#      - ROLEID_USER=17a75097-d54f-4860-a37b-837990008f3a
+#      - RUTA_KEYCLOAK=http://keycloak-service:9090
     networks:
       - net_webShop
+    restart: on-failure
 
   gateway-service:
     build:
@@ -77,23 +113,24 @@ services:
       dockerfile: Dockerfile
     container_name: gateway-service-webshop
     depends_on:
+      config-server:
+        condition: service_healthy
       eureka-server:
-        condition: service_started
+        condition: service_healthy
       product-service:
         condition: service_started
-      authentication-service:
-        condition: service_started
-      purchase-service:
-        condition: service_started
-    environment:
-      - SPRING_APPLICATION_NAME=gateway-service
-      - EUREKA_CLIENT_SERVICE-URL_DEFAULTZONE=http://eureka-server:8761/eureka/
-      - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER-URI=http://keycloak-service:8080/realms/webshop-api
-      - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK-SET-URI=http://keycloak-service:8080/realms/webshop-api/protocol/openid-connect/certs
+#    environment:
+#      - SPRING_APPLICATION_NAME=gateway-service
+#      - EUREKA_CLIENT_SERVICE-URL_DEFAULTZONE=http://eureka-server:8761/eureka/
+#      - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER-URI=http://keycloak-service:8080/realms/webshop-api
+#      - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK-SET-URI=http://keycloak-service:8080/realms/webshop-api/protocol/openid-connect/certs
+#      - SPRING_CLOUD_CONFIG_URI=http://config-server:8888
+#      - SPRING_CLOUD_CONFIG_PROFILE=prod
     ports:
       - 8080:8080
     networks:
       - net_webShop
+    restart: on-failure
 
   mariadb-service:
     image: 'mariadb'

@@ -3,4 +3,5 @@ include 'product'
 include 'eureka-server'
 include 'gateway'
 include 'authentication'
+include 'config-server'
 
